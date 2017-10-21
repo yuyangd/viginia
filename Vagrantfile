@@ -13,10 +13,12 @@ end
 
 def configure_ansible(config)
   # Configure Ansible as the provisioner for the VM
-  config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "ansible/playbook-vagrant.yml"
-    ansible.install_mode = "pip"
-    ansible.version = "2.4.0.0"
+  config.vm.provision :ansible_local do |ansible|
+    ansible.playbook      = "ansible/playbook-vagrant.yml"
+    ansible.verbose       = true
+    ansible.raw_arguments = "--vault-password-file /vagrant/private_key"
+    ansible.install_mode  = "pip"
+    ansible.version       = "2.4.0.0"
   end
 end
 

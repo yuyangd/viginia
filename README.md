@@ -30,6 +30,8 @@ To get the vagrant box up and running, go to the root directory of this reposito
 $ vagrant up
 ```
 
+A private_key has placed in the root directory, for demo purpose. The private key is used to encrypt the db password,
+
 ### Troubleshooting
 
 For mount shared folder error:
@@ -59,7 +61,7 @@ Use gunicorn to run the application server
 - app:
 Create the app role to run the deployment script
 
-- ruby (not required for production): 
+- ruby (not required for production):
 Install ruby, bundle for serverspec testing
 
 ### Deployment overview
@@ -72,6 +74,20 @@ Static content will be stored in nginx root directory, /var/www/static
 
 
 ### Security and encryption
+
+Use ansible Vault with vagrant
+
+save the password in the file, that pass into ansible playbook
+
+```
+config.vm.provision :ansible_local do |ansible|
+  ansible.playbook      = "ansible/playbook-vagrant.yml"
+  ansible.verbose       = true
+  ansible.raw_arguments = "--vault-password-file /vagrant/private_key"
+  ansible.install_mode  = "pip"
+  ansible.version       = "2.4.0.0"
+end
+```
 
 
 ### Run system tests
