@@ -12,6 +12,9 @@
     - { role: 'proxy' }
     - { role: 'gunicorn'}
     - { role: 'app' }
+    - { role: 'ruby',
+        ruby_install_gems: ['serverspec', 'rake']
+      }
   post_tasks:
     - name: Start the Gunicorn service
       service: name=gunicorn state=started enabled=yes
