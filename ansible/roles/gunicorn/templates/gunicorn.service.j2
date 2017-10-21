@@ -3,10 +3,10 @@ Description=gunicorn daemon
 After=network.target
 
 [Service]
-User=nginx
-Group=nginx
-WorkingDirectory={{ app_dir }}/{{ app_name }}
-ExecStart=/usr/bin/gunicorn --workers 3 --bind unix:{{ socket_dir }}/{{ app_name }}.sock {{ app_name }}.wsgi:application
+User={{ app_user }}
+Group={{ app_user }}
+WorkingDirectory={{ app_dir }}
+ExecStart=/usr/bin/gunicorn --workers 3 --bind unix:{{ socket_dir }}/{{ app_name }}.sock {{ app_name }}.wsgi:application  --error-logfile {{ gunicorn_log_path }}/error.log
 
 [Install]
 WantedBy=multi-user.target

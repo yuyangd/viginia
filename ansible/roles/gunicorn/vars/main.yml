@@ -1,4 +1,6 @@
 ---
 app_name: viginia
+app_user: vagrant
 app_dir: /opt/app
 socket_dir: /var/gunicorn
+gunicorn_log_path: /var/log/gunicorn
