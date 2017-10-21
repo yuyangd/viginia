@@ -1,0 +1,11 @@
+---
+- hosts: all
+  connection: ssh
+  user: vagrant
+  become: true
+  gather_facts: yes
+  roles:
+    - { role: 'local' }
+    - { role: 'db',
+        import-db: true
+      }
