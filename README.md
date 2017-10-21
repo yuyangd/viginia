@@ -59,6 +59,8 @@ Use gunicorn to run the application server
 - app:
 Create the app role to run the deployment script
 
+- ruby (not required for production): 
+Install ruby, bundle for serverspec testing
 
 ### Deployment overview
 
@@ -73,3 +75,12 @@ Static content will be stored in nginx root directory, /var/www/static
 
 
 ### Run system tests
+
+Run system tests
+
+```
+$ vagrant ssh
+$ cd /repo/tests/system
+$ bundle install
+$ rake spec
+```
