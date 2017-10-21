@@ -1,0 +1,4 @@
+---
+app_name: viginia
+app_dir: /opt/app
+socket_dir: /var/gunicorn
