@@ -18,7 +18,7 @@
 
 - name: Ensure ansible hosts exists
   template:
-    src: /etc/hosts.j2
+    src: hosts.j2
     dest: /etc/ansible/hosts
     owner: root
     group: root

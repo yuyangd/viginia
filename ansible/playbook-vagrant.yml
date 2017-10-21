@@ -9,3 +9,9 @@
     - { role: 'db',
         import-db: true
       }
+    - { role: 'proxy' }
+    - { role: 'gunicorn'}
+    - { role: 'app' }
+  post_tasks:
+    - name: Start the Gunicorn service
+      service: name=gunicorn state=started enabled=yes

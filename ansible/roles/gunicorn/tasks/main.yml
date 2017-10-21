@@ -9,6 +9,16 @@
     - psycopg2==2.7.3.1
     - pytz==2017.2
 
+- name: Ensure gunicorn required directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: 0755
+  with_items:
+    - "{{ socket_dir }}"
+    - "{{ gunicorn_log_path }}"
 
 - name: Create Systemd service file for Gunicorn
   template:

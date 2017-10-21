@@ -68,4 +68,8 @@ Application will be stored in /repo/viginia as it is.
 
 Static content will be stored in nginx root directory, /var/www/static
 
+
 ### Security and encryption
+
+
+### Run system tests
