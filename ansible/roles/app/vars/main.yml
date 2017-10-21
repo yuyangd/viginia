@@ -1,0 +1,7 @@
+---
+sync_app_path: /repo/viginia
+app_path: /opt/app
+ansible_user: vagrant
+static_src: /repo/viginia/static
+root_dir: /var/www
+nginx_user: nginx
