@@ -1,0 +1,25 @@
+- name: Put SELinux in permissive mode
+  selinux:
+    policy: targeted
+    state: permissive
+  when: selinux_disabled == False
+
+- name: Ensure epel-release is installed
+  yum: pkg=epel-release state=present
+
+- name: Ensure MD5 is installed
+  yum: pkg=perl-Digest-MD5-File state=present
+
+- name: Ensure ansible dir exists
+  file:
+    path: /etc/ansible
+    state: directory
+    mode: 0755
+
+- name: Ensure ansible hosts exists
+  template:
+    src: /etc/hosts.j2
+    dest: /etc/ansible/hosts
+    owner: root
+    group: root
+    mode: 0644
