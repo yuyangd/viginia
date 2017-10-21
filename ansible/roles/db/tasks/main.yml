@@ -1,0 +1,71 @@
+---
+- name: Install PostgreSQL packages.
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - postgresql
+    - postgresql-server
+    - postgresql-contrib
+    - postgresql-libs
+
+- name: Install PostgreSQL Python libraries.
+  package:
+    name: "python-psycopg2"
+    state: installed
+
+
+- name: Ensure PostgreSQL data directory.
+  file:
+    path: "{{ postgresql_data_dir }}"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    state: directory
+    mode: 0700
+
+- name: Ensure PostgreSQL database is initialized.
+  command: "{{ postgresql_bin_path }}/initdb -D {{ postgresql_data_dir }}"
+  args:
+    creates: /var/lib/pgsql/data/PG_VERSION
+  become: yes
+  become_user: "{{ postgresql_user }}"
+
+
+# Configure
+- name: Configure global settings.
+  lineinfile:
+    dest: "{{ postgresql_config_path }}/postgresql.conf"
+    regexp: "^#?{{ item.option }}.+$"
+    line: "{{ item.option }} = '{{ item.value }}'"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ postgresql_global_config_options }}"
+  notify: restart postgresql
+
+- name: Configure host based authentication (if entries are configured).
+  template:
+    src: "templates/pg_hba.conf.j2"
+    dest: "{{ postgresql_config_path }}/pg_hba.conf"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    mode: 0600
+  notify: restart postgresql
+  when: postgresql_hba_entries
+
+- name: Ensure PostgreSQL unix socket dirs exist.
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    mode: 02775
+  with_items: "{{ postgresql_socket_directories }}"
+
+
+- name: Start PostgreSQL service
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- include_tasks: import-db.yml
+  when: importdb == true

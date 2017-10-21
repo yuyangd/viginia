@@ -1,0 +1,39 @@
+- name: Ensure user created with permission to create db
+  postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    role_attr_flags: NOSUPERUSER,CREATEDB
+    state: present
+  become_user: "{{ postgresql_user }}"
+  become_method: sudo
+
+- name: Ensure database created
+  become_user: "{{ postgresql_user }}"
+  become_method: sudo
+  postgresql_db:
+    name: "{{ db_name }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_host: localhost
+    state: present
+
+- name: Ensure database restored from backup
+  become_user: "{{ postgresql_user }}"
+  become_method: sudo
+  postgresql_db:
+    name: "{{ db_name }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_host: localhost
+    state: restore
+    target: /repo/viginia/dbexport.pgsql
+
+- name: Ensure public cannot access the database
+  postgresql_privs:
+    db: "{{ db_name }}"
+    role: PUBLIC
+    type: database
+    priv: ALL
+    state: absent
+  become_user: "{{ postgresql_user }}"
+  become_method: sudo
